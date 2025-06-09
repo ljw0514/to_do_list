@@ -41,6 +41,20 @@
       margin-bottom: 5px;
       padding: 10px;
       border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .delete-btn {
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 12px;
     }
   </style>
 </head>
@@ -58,7 +72,19 @@
     input.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && input.value.trim() !== '') {
         const li = document.createElement('li');
-        li.textContent = input.value;
+
+        const span = document.createElement('span');
+        span.textContent = input.value;
+
+        const btn = document.createElement('button');
+        btn.textContent = 'x';
+        btn.classList.add('delete-btn');
+        btn.onclick = function () {
+          li.remove();
+        };
+
+        li.appendChild(span);
+        li.appendChild(btn);
         list.appendChild(li);
         input.value = '';
       }
