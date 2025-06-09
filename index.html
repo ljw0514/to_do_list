@@ -73,6 +73,19 @@
       if (e.key === 'Enter' && input.value.trim() !== '') {
         const li = document.createElement('li');
 
+        // 체크박스 생성 및 이벤트 추가
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.addEventListener('change', () => {
+          if (checkbox.checked) {
+            span.style.textDecoration = 'line-through';
+            span.style.color = '#999';
+          } else {
+            span.style.textDecoration = 'none';
+            span.style.color = 'black';
+          }
+        });
+
         const span = document.createElement('span');
         span.textContent = input.value;
 
@@ -83,6 +96,7 @@
           li.remove();
         };
 
+        li.appendChild(checkbox);
         li.appendChild(span);
         li.appendChild(btn);
         list.appendChild(li);
