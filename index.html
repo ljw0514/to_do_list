@@ -19,7 +19,7 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 300px;
+      width: 320px;
     }
     h1 {
       text-align: center;
@@ -41,8 +41,17 @@
       padding: 10px;
       border-radius: 5px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+    }
+    li.completed span.todo-text {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .todo-text {
+      flex: 1;
+      margin-left: 10px;
+      cursor: pointer;
     }
     .delete-btn {
       background: red;
@@ -54,9 +63,10 @@
       text-align: center;
       cursor: pointer;
       font-size: 12px;
+      margin-left: 10px;
     }
     .edit-input {
-      width: 100%;
+      flex: 1;
       padding: 5px;
       font-size: 14px;
       box-sizing: border-box;
@@ -74,67 +84,65 @@
     const input = document.getElementById('todo-input');
     const list = document.getElementById('todo-list');
 
-    input.addEventListener('keydown', function (e) {
+    input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && input.value.trim() !== '') {
         addTodo(input.value.trim());
         input.value = '';
       }
     });
 
-    function addTodo(text) {
+    function addTodo(text, completed = false) {
       const li = document.createElement('li');
+      if (completed) li.classList.add('completed');
 
+      // 체크박스
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = completed;
+
+      checkbox.addEventListener('change', () => {
+        li.classList.toggle('completed', checkbox.checked);
+      });
+
+      // 텍스트 스팬 (수정 기능 포함)
       const span = document.createElement('span');
       span.textContent = text;
-      span.style.flex = '1';
-      span.style.cursor = 'pointer';
+      span.className = 'todo-text';
 
-      // 클릭 시 수정 모드 전환
+      // 클릭 시 수정 모드
       span.addEventListener('click', () => {
         const editInput = document.createElement('input');
         editInput.type = 'text';
         editInput.value = span.textContent;
         editInput.className = 'edit-input';
 
-        // 편집 인풋 교체
         li.replaceChild(editInput, span);
         editInput.focus();
 
-        // 저장 함수
         function save() {
           if (editInput.value.trim() !== '') {
             span.textContent = editInput.value.trim();
             li.replaceChild(span, editInput);
           } else {
-            // 빈값이면 원래 텍스트 유지
             li.replaceChild(span, editInput);
           }
         }
 
-        // Enter 누르면 저장
         editInput.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            save();
-          }
-          // Esc 누르면 수정 취소
-          if (e.key === 'Escape') {
-            li.replaceChild(span, editInput);
-          }
+          if (e.key === 'Enter') save();
+          if (e.key === 'Escape') li.replaceChild(span, editInput);
         });
 
-        // 포커스 아웃 시 저장
-        editInput.addEventListener('blur', () => {
-          save();
-        });
+        editInput.addEventListener('blur', save);
       });
 
+      // 삭제 버튼
       const btn = document.createElement('button');
       btn.textContent = 'x';
       btn.classList.add('delete-btn');
-      btn.onclick = function () {
-        li.remove();
-      };
+      btn.onclick = () => li.remove();
 
+      li.appendChild(checkbox);
       li.appendChild(span);
       li.appendChild(btn);
       list.appendChild(li);
