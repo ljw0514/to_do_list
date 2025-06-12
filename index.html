@@ -91,25 +91,42 @@
       }
     });
 
+    function saveTodos() {
+      const todos = [];
+      document.querySelectorAll('#todo-list li').forEach((li) => {
+        const text = li.querySelector('.todo-text')?.textContent;
+        const checked = li.querySelector('input[type="checkbox"]')?.checked;
+        if (text) {
+          todos.push({ text, completed: checked });
+        }
+      });
+      localStorage.setItem('todos', JSON.stringify(todos));
+    }
+
+    function loadTodos() {
+      const saved = localStorage.getItem('todos');
+      if (saved) {
+        JSON.parse(saved).forEach(todo => addTodo(todo.text, todo.completed));
+      }
+    }
+
     function addTodo(text, completed = false) {
       const li = document.createElement('li');
       if (completed) li.classList.add('completed');
 
-      // 체크박스
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.checked = completed;
 
       checkbox.addEventListener('change', () => {
         li.classList.toggle('completed', checkbox.checked);
+        saveTodos();
       });
 
-      // 텍스트 스팬 (수정 기능 포함)
       const span = document.createElement('span');
       span.textContent = text;
       span.className = 'todo-text';
 
-      // 클릭 시 수정 모드
       span.addEventListener('click', () => {
         const editInput = document.createElement('input');
         editInput.type = 'text';
@@ -122,10 +139,9 @@
         function save() {
           if (editInput.value.trim() !== '') {
             span.textContent = editInput.value.trim();
-            li.replaceChild(span, editInput);
-          } else {
-            li.replaceChild(span, editInput);
           }
+          li.replaceChild(span, editInput);
+          saveTodos();
         }
 
         editInput.addEventListener('keydown', (e) => {
@@ -136,24 +152,23 @@
         editInput.addEventListener('blur', save);
       });
 
-      // 삭제 버튼
       const btn = document.createElement('button');
       btn.textContent = 'x';
       btn.classList.add('delete-btn');
-      btn.onclick = () => li.remove();
+      btn.onclick = () => {
+        li.remove();
+        saveTodos();
+      };
 
       li.appendChild(checkbox);
       li.appendChild(span);
       li.appendChild(btn);
       list.appendChild(li);
+      saveTodos();
     }
 
-    // ✅ 더블 클릭 시 강조 표시 기능 추가
-    list.addEventListener('dblclick', (e) => {
-      if (e.target.classList.contains('todo-text')) {
-        e.target.style.backgroundColor = '#ffff99'; // 연노랑 강조
-      }
-    });
+    // Load saved todos on page load
+    loadTodos();
   </script>
 </body>
 </html>
