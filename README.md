@@ -69,8 +69,5 @@ cd 저장소명
 
 ---
 
-## 📎 기타 정보
 
 * 개발자: Jaewoong Lee
-* 주요 기술: HTML, CSS, JavaScript, Git/GitHub
-* 저장소 링크: [https://github.com/사용자명/저장소명](https://github.com/사용자명/저장소명)
