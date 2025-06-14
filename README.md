@@ -49,17 +49,9 @@ refactor: unify todo item structure
 
 ## 💻 실행 방법
 
-### 1. 프로젝트 클론
-
-```bash
-git clone https://github.com/사용자명/저장소명.git
-cd 저장소명
-```
-
-### 2. 실행
 
 * VS Code에서 `index.html` 파일을 브라우저로 열면 실행됨
-* 또는 `Live Server` 확장 프로그램을 사용해 실행 가능
+* 또는 `Live Server`행
 
 ---
 
